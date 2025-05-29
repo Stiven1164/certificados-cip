@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Buscar Certificado</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    header {
+      background-color: #1a1a1a;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header img {
+      max-width: 200px;
+      height: auto;
+      border-radius: 8px;
+    }
+
+    nav {
+      background-color: #800000;
+      padding: 10px;
+      text-align: left;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+      padding: 10px 15px;
+      border-radius: 4px;
+      background-color: #660000;
+      transition: background-color 0.3s ease;
+    }
+
+    nav a:hover {
+      background-color: #4c0000;
+    }
+
+    main {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #cc0000;
+      margin-bottom: 20px;
+    }
+
+    .search-container {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      align-items: center;
+    }
+
+    input[type="text"] {
+      flex-grow: 1;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    button {
+      padding: 12px 25px;
+      font-size: 16px;
+      background-color: #cc0000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #990000;
+    }
+
+    #resultado {
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      padding: 12px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f0f0f0;
+      color: #333;
+      font-weight: bold;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .mensaje {
+      background-color: #ffe6e6;
+      border: 1px solid #cc0000;
+      color: #990000;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .mensaje.info {
+        background-color: #e6f7ff;
+        border-color: #007bff;
+        color: #0056b3;
+    }
+
+    .actualizacion {
+      font-size: 0.9em;
+      color: #666;
+      text-align: right;
+      margin-bottom: 10px;
+    }
+
+    @media (max-width: 600px) {
+      .search-container {
+        flex-direction: column;
+      }
+      input[type="text"], button {
+        width: 100%;
+      }
+      nav {
+        text-align: center;
+      }
+      nav a {
+        display: block;
+        margin: 5px 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <img src="https://www.ciptarapoto.com/img/logo-default-slim-dark.png" alt="CIP Tarapoto Logo" onerror="this.alt='Logo no disponible'; this.src='https://placehold.co/200x50/1a1a1a/ffffff?text=CIP+Tarapoto';">
+  </header>
+
+  <nav>
+    <a href="https://www.ciptarapoto.com">INICIO</a>
+  </nav>
+
+  <main>
+    <h1>Buscar Certificado</h1>
+    <div class="search-container">
+      <input type="text" id="codigoInput" placeholder="Ingrese el código del certificado">
+      <button onclick="buscarCodigo()">Buscar</button>
+    </div>
+    <div id="resultado">
+        <div class="mensaje info">Ingrese un código para buscar un certificado.</div>
+    </div>
+  </main>
+
+  <script>
+    // URL de la hoja de cálculo de Google Sheets publicada como CSV
+    const hojaURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTJgm2O0_f5ohCaZhBqMu9JHgqrpEKzngLQq2Xcxbi20u0dAHH2YdoCqAFjd-L-N_cm5lBB5wowYZqK/pub?output=csv";
+
+    // Variables globales para almacenar datos
+    let datos = [];
+    let encabezado = [];
+    let ultimaActualizacion = null;
+
+    // Función mejorada para cargar datos
+    async function cargarDatos() {
+      try {
+        // Añadir timestamp para evitar caché
+        const urlActual = `${hojaURL}&_=${Date.now()}`;
+        const response = await fetch(urlActual);
+        
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+
+        const csvText = await response.text();
+        const lineas = csvText.split('\n').filter(linea => linea.trim() !== '');
+        
+        if (lineas.length < 2) {
+          throw new Error('El archivo CSV no contiene suficientes datos');
+        }
+
+        // Procesar encabezados
+        encabezado = lineas[0].split(',').map(item => item.trim().replace(/^"|"$/g, ''));
+        
+        // Procesar datos
+        datos = lineas.slice(1).map(linea => {
+          return linea.split(',').map(item => item.trim().replace(/^"|"$/g, ''));
+        });
+
+        ultimaActualizacion = new Date();
+        return true;
+        
+      } catch (error) {
+        console.error('Error al cargar datos:', error);
+        mostrarError(`Error al cargar datos: ${error.message}`);
+        return false;
+      }
+    }
+
+    // Función para mostrar errores
+    function mostrarError(mensaje) {
+      const resultadoDiv = document.getElementById("resultado");
+      resultadoDiv.innerHTML = `<div class="mensaje">⚠️ ${mensaje}</div>`;
+    }
+
+    // Función principal de búsqueda
+    async function buscarCodigo() {
+      const codigo = document.getElementById("codigoInput").value.trim();
+      const resultadoDiv = document.getElementById("resultado");
+      
+      if (!codigo) {
+        mostrarError("Por favor ingrese un código de certificado");
+        return;
+      }
+
+      resultadoDiv.innerHTML = '<div class="mensaje info">Buscando certificado...</div>';
+
+      try {
+        // Primero actualizamos los datos
+        const exito = await cargarDatos();
+        if (!exito) return;
+
+        // Buscar el código en los datos actualizados
+        const certificado = datos.find(fila => fila[0] && fila[0].toLowerCase() === codigo.toLowerCase());
+        
+        if (certificado) {
+          // Construir tabla de resultados
+          let html = `<div class="actualizacion">Última actualización: ${ultimaActualizacion.toLocaleString()}</div>`;
+          html += '<table><thead><tr>';
+          encabezado.forEach(col => html += `<th>${col}</th>`);
+          html += '</tr></thead><tbody><tr>';
+          certificado.forEach(dato => html += `<td>${dato}</td>`);
+          html += '</tr></tbody></table>';
+          
+          resultadoDiv.innerHTML = html;
+        } else {
+          resultadoDiv.innerHTML = `
+            <div class="actualizacion">Última actualización: ${ultimaActualizacion.toLocaleString()}</div>
+            <div class="mensaje">No se encontró el certificado con código "${codigo}"</div>
+          `;
+        }
+      } catch (error) {
+        console.error('Error en búsqueda:', error);
+        mostrarError(`Error al buscar certificado: ${error.message}`);
+      }
+    }
+
+    // Carga inicial de datos
+    window.addEventListener('DOMContentLoaded', async () => {
+      await cargarDatos();
+      document.getElementById("resultado").innerHTML = `
+        <div class="mensaje info">
+          Sistema listo para búsquedas<br>
+          ${ultimaActualizacion ? 'Datos actualizados: ' + ultimaActualizacion.toLocaleString() : ''}
+        </div>
+      `;
+    });
+
+    // Permitir búsqueda con Enter
+    document.getElementById("codigoInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") buscarCodigo();
+    });
+  </script>
+</body>
+</html>
