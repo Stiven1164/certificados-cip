@@ -5,39 +5,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Buscar Certificado</title>
   <style>
-    * {
-      box-sizing: border-box;
-    }
-
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       font-family: "Segoe UI", sans-serif;
       background-color: #f9f9f9;
       color: #333;
       line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
-
     header {
       background-color: #1a1a1a;
       padding: 20px;
       text-align: center;
     }
-
     header img {
       max-width: 200px;
       height: auto;
       border-radius: 8px;
     }
-
     nav {
       background-color: #800000;
       padding: 10px;
       text-align: left;
     }
-
     nav a {
       color: #fff;
       text-decoration: none;
@@ -47,11 +37,7 @@
       background-color: #660000;
       transition: background-color 0.3s ease;
     }
-
-    nav a:hover {
-      background-color: #4c0000;
-    }
-
+    nav a:hover { background-color: #4c0000; }
     main {
       max-width: 800px;
       margin: 20px auto;
@@ -59,22 +45,18 @@
       background-color: #fff;
       border-radius: 8px;
       box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      flex: 1;
     }
-
     h1 {
       text-align: center;
       color: #cc0000;
       margin-bottom: 20px;
     }
-
     .search-container {
       display: flex;
       gap: 10px;
       margin-bottom: 20px;
       align-items: center;
     }
-
     input[type="text"] {
       flex-grow: 1;
       padding: 12px;
@@ -82,7 +64,6 @@
       border: 1px solid #ccc;
       border-radius: 4px;
     }
-
     button {
       padding: 12px 25px;
       font-size: 16px;
@@ -93,38 +74,29 @@
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
-    button:hover {
-      background-color: #990000;
-    }
-
+    button:hover { background-color: #990000; }
     #resultado {
       margin-top: 20px;
       overflow-x: auto;
     }
-
     table {
       width: 100%;
       border-collapse: collapse;
       margin-top: 10px;
     }
-
     th, td {
       padding: 12px;
       border: 1px solid #ddd;
       text-align: left;
     }
-
     th {
       background-color: #f0f0f0;
       color: #333;
       font-weight: bold;
     }
-
     tr:nth-child(even) {
       background-color: #f9f9f9;
     }
-
     .mensaje {
       background-color: #ffe6e6;
       border: 1px solid #cc0000;
@@ -136,43 +108,16 @@
       text-align: center;
     }
     .mensaje.info {
-        background-color: #e6f7ff;
-        border-color: #007bff;
-        color: #0056b3;
+      background-color: #e6f7ff;
+      border-color: #007bff;
+      color: #0056b3;
     }
-
     .actualizacion {
       font-size: 0.9em;
       color: #666;
       text-align: right;
       margin-bottom: 10px;
     }
-
-    footer {
-      background-color: #1a1a1a;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-      font-size: 14px;
-      border-top: 3px solid #800000;
-      margin-top: 30px;
-    }
-
-    .footer-content {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .footer-contact {
-      margin: 0;
-      color: #cc0000;
-      font-weight: bold;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-    }
-
     @media (max-width: 600px) {
       .search-container {
         flex-direction: column;
@@ -180,16 +125,10 @@
       input[type="text"], button {
         width: 100%;
       }
-      nav {
-        text-align: center;
-      }
+      nav { text-align: center; }
       nav a {
         display: block;
         margin: 5px 0;
-      }
-      .footer-contact {
-        flex-direction: column;
-        gap: 0;
       }
     }
   </style>
@@ -211,60 +150,29 @@
       <button onclick="buscarCodigo()">Buscar</button>
     </div>
     <div id="resultado">
-        <div class="mensaje info">Ingrese un código para buscar un certificado.</div>
+      <div class="mensaje info">Ingrese un código para buscar un certificado.</div>
     </div>
   </main>
 
-  <footer>
-    <div class="footer-content">
-      <p style="margin: 0 0 10px 0;">Oficina de Sistemas - CIP CDSM Tarapoto</p>
-      <p class="footer-contact">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-        </svg>
-        Contacto: 954 450 484
-      </p>
-    </div>
-  </footer>
-
   <script>
-    // URL de la hoja de cálculo de Google Sheets publicada como CSV
-    const hojaURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTJgm2O0_f5ohCaZhBqMu9JHgqrpEKzngLQq2Xcxbi20u0dAHH2YdoCqAFjd-L-N_cm5lBB5wowYZqK/pub?output=csv";
+    const hojaURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ05dskk8VHpvuxN1BQyGTJoUwnaSFXaZZEsCZNbzkzHYhAwitt-ZZ8L1LZmpaw1Q/pub?output=csv&gid=310084166";
 
-    // Variables globales para almacenar datos
     let datos = [];
     let encabezado = [];
     let ultimaActualizacion = null;
 
-    // Función mejorada para cargar datos
     async function cargarDatos() {
       try {
-        // Añadir timestamp para evitar caché
         const urlActual = `${hojaURL}&_=${Date.now()}`;
         const response = await fetch(urlActual);
-        
-        if (!response.ok) {
-          throw new Error(`Error HTTP: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
         const csvText = await response.text();
         const lineas = csvText.split('\n').filter(linea => linea.trim() !== '');
-        
-        if (lineas.length < 2) {
-          throw new Error('El archivo CSV no contiene suficientes datos');
-        }
-
-        // Procesar encabezados
+        if (lineas.length < 2) throw new Error('El archivo CSV no contiene suficientes datos');
         encabezado = lineas[0].split(',').map(item => item.trim().replace(/^"|"$/g, ''));
-        
-        // Procesar datos
-        datos = lineas.slice(1).map(linea => {
-          return linea.split(',').map(item => item.trim().replace(/^"|"$/g, ''));
-        });
-
+        datos = lineas.slice(1).map(linea => linea.split(',').map(item => item.trim().replace(/^"|"$/g, '')));
         ultimaActualizacion = new Date();
         return true;
-        
       } catch (error) {
         console.error('Error al cargar datos:', error);
         mostrarError(`Error al cargar datos: ${error.message}`);
@@ -272,17 +180,15 @@
       }
     }
 
-    // Función para mostrar errores
     function mostrarError(mensaje) {
       const resultadoDiv = document.getElementById("resultado");
       resultadoDiv.innerHTML = `<div class="mensaje">⚠️ ${mensaje}</div>`;
     }
 
-    // Función principal de búsqueda
     async function buscarCodigo() {
       const codigo = document.getElementById("codigoInput").value.trim();
       const resultadoDiv = document.getElementById("resultado");
-      
+
       if (!codigo) {
         mostrarError("Por favor ingrese un código de certificado");
         return;
@@ -291,22 +197,18 @@
       resultadoDiv.innerHTML = '<div class="mensaje info">Buscando certificado...</div>';
 
       try {
-        // Primero actualizamos los datos
         const exito = await cargarDatos();
         if (!exito) return;
 
-        // Buscar el código en los datos actualizados
         const certificado = datos.find(fila => fila[0] && fila[0].toLowerCase() === codigo.toLowerCase());
-        
+
         if (certificado) {
-          // Construir tabla de resultados
           let html = `<div class="actualizacion">Última actualización: ${ultimaActualizacion.toLocaleString()}</div>`;
           html += '<table><thead><tr>';
           encabezado.forEach(col => html += `<th>${col}</th>`);
           html += '</tr></thead><tbody><tr>';
           certificado.forEach(dato => html += `<td>${dato}</td>`);
           html += '</tr></tbody></table>';
-          
           resultadoDiv.innerHTML = html;
         } else {
           resultadoDiv.innerHTML = `
@@ -320,7 +222,6 @@
       }
     }
 
-    // Carga inicial de datos
     window.addEventListener('DOMContentLoaded', async () => {
       await cargarDatos();
       document.getElementById("resultado").innerHTML = `
@@ -331,7 +232,6 @@
       `;
     });
 
-    // Permitir búsqueda con Enter
     document.getElementById("codigoInput").addEventListener("keypress", (e) => {
       if (e.key === "Enter") buscarCodigo();
     });
